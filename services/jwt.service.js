@@ -8,7 +8,7 @@ const JwtStrategy = passportJWT.Strategy;
 /**
  * Initial jwt auth by header.
  */
-const jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
+const jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 require('dotenv').config();
 
