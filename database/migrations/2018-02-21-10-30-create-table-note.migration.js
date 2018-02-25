@@ -15,6 +15,11 @@ module.exports = {
           defaultValue: false,
           allowNull: false
         },
+        title: {
+          type: Sequelize.STRING,
+          defaultValue: false,
+          allowNull: false
+        },
         content: {
           type: Sequelize.STRING,
           defaultValue: false,

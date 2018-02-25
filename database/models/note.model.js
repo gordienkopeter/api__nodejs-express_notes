@@ -16,6 +16,7 @@ const NoteModel = DB.instance.define(
       type: Sequelize.UUID,
       notNull: true
     },
+    title: Sequelize.STRING,
     content: Sequelize.STRING,
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
