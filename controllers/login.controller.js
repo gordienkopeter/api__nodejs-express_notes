@@ -11,6 +11,9 @@ class LoginController {
    *   "email": "test@test.com",
    *   "password": "password"
    * }
+   * @example Response {
+   *   "token": "access token"
+   * }
    */
   static async login(req, res) {
     const { body: { email, password } } = req;
