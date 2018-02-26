@@ -7,8 +7,9 @@
     "start": "node_modules/.bin/nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sequelize": "node_modules/.bin/sequelize",
-    "build": "npm run cp:env && npm run sequelize db:migrate",
-    "cp:env": "cp ./.env.example .env"
+    "build": "npm run create-storage && npm run cp:env && npm run sequelize db:migrate",
+    "cp:env": "cp ./.env.example .env",
+    "create-storage": "mkdir ./.storage"
   },
   "author": {
     "name": "Peter_V",
