@@ -1,4 +1,5 @@
 const UserModel = require('../database/models/user.model');
+const TokenModel = require('../database/models/token.model');
 const JWTService = require('../services/jwt.service');
 
 class LoginController {
@@ -19,6 +20,13 @@ class LoginController {
     const { body: { email, password } } = req;
     const user = await UserModel.findOne({ where: { email } });
     const token = JWTService.generateTokenByUser(user);
+    // await user.setToken({ token });
+    try {
+      console.log(user.updateToken);
+      console.log(await user.setToken({ token }));
+    } catch (e) {
+      console.log(e);
+    }
 
     res.send({ token });
   }

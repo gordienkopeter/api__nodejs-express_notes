@@ -1,6 +1,7 @@
 const DB = require('../');
 const Sequelize = require('sequelize');
 const NoteModel = require('./note.model');
+const TokenModel = require('./token.model');
 
 /**
  * This model describes users table properties.
@@ -35,11 +36,13 @@ const UserModel = DB.instance.define(
     updatedAt: Sequelize.DATE
   },
   {
-    timestamps: true
+    timestamps: true,
+    tableName: 'users'
   }
 );
 
 UserModel.removeAttribute('id');
-UserModel.hasMany(NoteModel);
+// UserModel.hasMany(NoteModel);
+UserModel.hasOne(TokenModel);
 
 module.exports = UserModel;

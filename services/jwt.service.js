@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const passportJWT = require('passport-jwt');
-const UserModel = require('../database/models/user.model');
+const TokenModel = require('../database/models/user.model');
 
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
@@ -40,8 +40,10 @@ class JWTService {
    * @example {header} Authorization: JWT access token.
    */
   static get passportJWTStategy() {
-    return new JwtStrategy({ jwtFromRequest, secretOrKey }, async (jwtPayload, next) => {
-      const { uuid } = jwtPayload;
+    return new JwtStrategy({ jwtFromRequest, secretOrKey }, async (req, jwtPayload, next) => {
+      // const { uuid } = jwtPayload;
+      // const {} = req
+      console.log(req);
 
       try {
         next(null, await UserModel.findById(uuid));

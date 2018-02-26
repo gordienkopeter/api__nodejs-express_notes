@@ -1,4 +1,5 @@
 const UserModel = require('../database/models/user.model');
+const TokenModel = require('../database/models/token.model');
 const JWTService = require('../services/jwt.service');
 const bcrypt = require('bcrypt');
 
@@ -29,6 +30,7 @@ class RegisterController {
       const passwordHash = await bcrypt.hash(password, +saltRounds);
       const user = await UserModel.create({ email, password: passwordHash, firstName, lastName });
       const token = JWTService.generateTokenByUser(user);
+      await TokenModel.create({ userUuid: user.uuid, token });
 
       res.send({ token });
     } catch (e) {
