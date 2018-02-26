@@ -17,16 +17,12 @@ class LoginController {
    * }
    */
   static async login(req, res) {
-    const { body: { email, password } } = req;
+    const { email, password } = req.body;
     const user = await UserModel.findOne({ where: { email } });
     const token = JWTService.generateTokenByUser(user);
-    // await user.setToken({ token });
-    try {
-      console.log(user.updateToken);
-      console.log(await user.setToken({ token }));
-    } catch (e) {
-      console.log(e);
-    }
+    const tokenModel = await user.getToken();
+
+    await tokenModel.update({ token });
 
     res.send({ token });
   }
