@@ -2,6 +2,7 @@ const validator = require('validator');
 const Middleware = require('./middleware');
 const UserModel = require('../database/models/user.model');
 const validateEmail = require('./validate-email');
+const validatePassword = require('./validate-password');
 
 /**
  * This middleware validates registration data.
@@ -15,28 +16,16 @@ const RegisterMiddleware = async (req, res, next) => {
   const errors = {};
 
   const checkEmail = validateEmail(email);
+  const checkPassword = validatePassword(password);
 
-  if (email) {
-    if (typeof email !== 'string') {
-      errors.email = 'Email field must be string!';
-    } else if (!validator.isEmail(email)) {
-      errors.email = 'Invalid email address!';
-    } else if (await UserModel.findOne({ where: { email } })) {
-      errors.email = 'Email is exists!';
-    }
-  } else {
-    errors.email = 'Field email is required!';
+  if (checkEmail) {
+    errors.email = checkEmail;
+  } else if (await UserModel.findOne({ where: { email } })) {
+    errors.email = 'Email is exists!';
   }
 
-  if (password) {
-    if (typeof password !== 'string') {
-      errors.password = 'Password field must be string!';
-    } else if (!validator.isLength(password, { min: 6 })) {
-      errors.password =
-        'Invalid password length. Min value must have 6 letter!';
-    }
-  } else {
-    errors.password = 'Field password is required!';
+  if (checkPassword) {
+    errors.password = checkPassword;
   }
 
   if (!firstName) {
