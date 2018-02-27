@@ -1,6 +1,7 @@
 const validator = require('validator');
 const Middleware = require('./middleware');
 const UserModel = require('../database/models/user.model');
+const validateEmail = require('./validate-email');
 
 /**
  * This middleware validates registration data.
@@ -12,6 +13,8 @@ const UserModel = require('../database/models/user.model');
 const RegisterMiddleware = async (req, res, next) => {
   const { email, password, firstName, lastName } = req.body;
   const errors = {};
+
+  const checkEmail = validateEmail(email);
 
   if (email) {
     if (typeof email !== 'string') {

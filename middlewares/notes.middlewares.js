@@ -33,12 +33,16 @@ class NotesMiddlewares extends Middleware {
    * @param {*} res
    * @param {*} next
    */
-  static create(req, res, next) {
+  static async create(req, res, next) {
     const { content, title } = req.body;
     const errors = {};
 
     if (!title) {
       errors.title = 'Title field is required!';
+    }
+
+    if (await NotesModel.findOne({ where: { title } })) {
+      errors.title = 'Title is exists!';
     }
 
     this.next(content, errors, next);

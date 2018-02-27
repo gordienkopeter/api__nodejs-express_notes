@@ -2,6 +2,8 @@ const validator = require('validator');
 const UserModel = require('../database/models/user.model');
 const bcrypt = require('bcrypt');
 const Middleware = require('./middleware');
+const validateEmail = require('./validate-email');
+const validatePassword = require('./validate-password');
 
 /**
  * This middleware validates login request data.
@@ -13,20 +15,21 @@ const Middleware = require('./middleware');
 const LoginMiddleware = async (req, res, next) => {
   const { email, password } = req.body;
   const errors = {};
-  let user = null;
+  const user = await UserModel.findOne({ where: { email } });
 
-  try {
-    user = await UserModel.findOne({ where: { email } });
-  } catch (e) {
-    return res.status(500).send(e);
+  const checkEmail = validateEmail(email);
+  const checkPassword = validatePassword(password);
+
+  if (checkEmail) {
+    errors.email = checkEmail;
+  } else if (!user) {
+    errors.email = 'Email is not exists!';
   }
 
-  if (!user) {
-    errors.username = 'Invalid username value!';
-  }
-
-  if (user && !bcrypt.compare(password, user.password)) {
-    errors.username = 'Passwords did not match';
+  if (checkPassword) {
+    errors.password = checkPassword;
+  } else if (user && !await bcrypt.compare(password, user.password)) {
+    errors.password = 'Passwords did not match!';
   }
 
   if (Middleware.isErrors(errors)) {

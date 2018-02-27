@@ -8,25 +8,24 @@ const server = new Server();
 server.run();
 
 const app = server.express;
-const path = '/api/auth/register';
+const path = '/api/auth/login';
 
 chai.use(chaiHttp);
 
-describe('Register endpoint', () => {
+describe('Login endpoint', () => {
   const req = chai.request(app);
   const errors = {
     empty: {
       email: 'Field email is required!',
-      password: 'Field password is required!',
-      firstName: 'Field firstName is required!',
-      lastName: 'Field firstName is required!'
+      password: 'Field password is required!'
     },
     fail: {
       email: 'Invalid email address!',
+      emailIsNotExists: 'Email is not exists!',
       passwordIsNotString: 'Password field must be string!',
       passwordMinLength:
         'Invalid password length. Min value must have 6 letter!',
-      emailIsExists: 'Email is exists!'
+      passwordNotMatch: 'Passwords did not match!'
     }
   };
 
@@ -50,14 +49,6 @@ describe('Register endpoint', () => {
           .property('password')
           .eql(errors.empty.password);
 
-        res.body.messages.should.have
-          .property('firstName')
-          .eql(errors.empty.firstName);
-
-        res.body.messages.should.have
-          .property('lastName')
-          .eql(errors.empty.lastName);
-
         done();
       });
   });
@@ -80,51 +71,12 @@ describe('Register endpoint', () => {
           .property('password')
           .eql(errors.empty.password);
 
-        res.body.messages.should.have
-          .property('firstName')
-          .eql(errors.empty.firstName);
-
-        res.body.messages.should.have
-          .property('lastName')
-          .eql(errors.empty.lastName);
-
-        done();
-      });
-  });
-
-  it('request data with email and password', done => {
-    const data = { emal: 'test@gmail.com', password: '123456' };
-
-    req
-      .post(path)
-      .set('Accept', 'application/json')
-      .send(data)
-      .end((err, res) => {
-        const { status, body } = res;
-
-        res.should.have.status(400);
-        res.body.should.be.a('object');
-        res.body.should.have.property('messages');
-
-        res.body.messages.should.have
-          .property('firstName')
-          .eql(errors.empty.firstName);
-
-        res.body.messages.should.have
-          .property('lastName')
-          .eql(errors.empty.lastName);
-
         done();
       });
   });
 
   it('request data with invalid email', done => {
-    const data = {
-      email: 'test',
-      password: '123456',
-      firstName: 'test',
-      lastName: 'test'
-    };
+    const data = { email: 'test', password: '123456' };
 
     req
       .post(path)
@@ -143,12 +95,28 @@ describe('Register endpoint', () => {
   });
 
   it('request data with a password is not string', done => {
-    const data = {
-      email: 'test@gmail.com',
-      password: 123456,
-      firstName: 'test',
-      lastName: 'test'
-    };
+    const data = { email: 'test@gmail.com', password: 123456 };
+
+    req
+      .post(path)
+      .set('Accept', 'application/json')
+      .send(data)
+      .end((err, res) => {
+        const { status, body } = res;
+
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('messages');
+        res.body.messages.should.have
+          .property('password')
+          .eql(errors.fail.passwordIsNotString);
+
+        done();
+      });
+  });
+
+  it('request data with a password is not string', done => {
+    const data = { email: 'test@gmail.com', password: 123456 };
 
     req
       .post(path)
@@ -169,12 +137,7 @@ describe('Register endpoint', () => {
   });
 
   it('request data with invalid password length', done => {
-    const data = {
-      email: 'test@gmail.com',
-      password: '123',
-      firstName: 'test',
-      lastName: 'test'
-    };
+    const data = { email: 'test@gmail.com', password: '123' };
 
     req
       .post(path)
@@ -194,15 +157,8 @@ describe('Register endpoint', () => {
       });
   });
 
-  const dateTime = new Date().getTime();
-
-  it('success register', done => {
-    const data = {
-      email: `test${dateTime}@gmail.com`,
-      password: '123456',
-      firstName: 'test',
-      lastName: 'test'
-    };
+  it('passwords did not match', done => {
+    const data = { email: 'test@gmail.com', password: '123234234' };
 
     req
       .post(path)
@@ -211,21 +167,21 @@ describe('Register endpoint', () => {
       .end((err, res) => {
         const { status, body } = res;
 
-        res.should.have.status(200);
+        res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('token').a('string');
+        res.body.should.have.property('messages');
+        res.body.messages.should.have
+          .property('password')
+          .eql(errors.fail.passwordNotMatch);
 
         done();
       });
   });
 
-  it('email is exists', done => {
-    const data = {
-      email: `test${dateTime}@gmail.com`,
-      password: '123456',
-      firstName: 'test',
-      lastName: 'test'
-    };
+  const dateTime = new Date().getTime();
+
+  it('email is not exists', done => {
+    const data = { email: `test${dateTime}@gmail.com` };
 
     req
       .post(path)
@@ -239,9 +195,36 @@ describe('Register endpoint', () => {
         res.body.should.have.property('messages');
         res.body.messages.should.have
           .property('email')
-          .eql(errors.fail.emailIsExists);
+          .eql(errors.fail.emailIsNotExists);
 
         done();
+      });
+  });
+
+  it('success login', done => {
+    const email = `test${dateTime}@gmail.com`;
+    const password = '123456';
+    let data = { email, password, firstName: 'test', lastName: 'test' };
+
+    req
+      .post('/api/auth/register')
+      .set('Accept', 'application/json')
+      .send(data)
+      .end((err, res) => {
+        data = { email, password };
+        req
+          .post(path)
+          .set('Accept', 'application/json')
+          .send(data)
+          .end((err, res) => {
+            const { status, body } = res;
+
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('token').a('string');
+
+            done();
+          });
       });
   });
 });
