@@ -25,17 +25,17 @@ class RegisterController {
    */
   static async register(req, res) {
     const { email, password, firstName, lastName } = req.body;
+    const passwordHash = await bcrypt.hash(password, +saltRounds);
+    const user = await UserModel.create({
+      email,
+      password: passwordHash,
+      firstName,
+      lastName
+    });
+    const token = JWTService.generateTokenByUser(user);
+    await TokenModel.create({ userUuid: user.uuid, token });
 
-    try {
-      const passwordHash = await bcrypt.hash(password, +saltRounds);
-      const user = await UserModel.create({ email, password: passwordHash, firstName, lastName });
-      const token = JWTService.generateTokenByUser(user);
-      await TokenModel.create({ userUuid: user.uuid, token });
-
-      res.send({ token });
-    } catch (e) {
-      res.status(500).send(e);
-    }
+    res.send({ token });
   }
 }
 

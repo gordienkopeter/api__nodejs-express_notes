@@ -34,8 +34,12 @@ class NotesMiddlewares extends Middleware {
    * @param {*} next
    */
   static create(req, res, next) {
-    const { body: { content } } = req;
+    const { content, title } = req.body;
     const errors = {};
+
+    if (!title) {
+      errors.title = 'Title field is required!';
+    }
 
     this.next(content, errors, next);
   }
