@@ -5,8 +5,12 @@ const NotesMiddlewares = require('../middlewares/notes.middlewares');
 /**
  * Notes endpoint middleware list.
  */
-notesRouter.post('/', (req, res, next) => NotesMiddlewares.create(req, res, next));
-notesRouter.post('/:id', (req, res, next) => NotesMiddlewares.update(req, res, next));
+notesRouter.post('/', (req, res, next) =>
+  NotesMiddlewares.create(req, res, next)
+);
+notesRouter.post('/:id', (req, res, next) =>
+  NotesMiddlewares.update(req, res, next)
+);
 
 /**
  * Notes endpoint list.

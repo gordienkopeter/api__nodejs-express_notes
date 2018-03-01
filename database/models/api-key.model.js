@@ -2,10 +2,10 @@ const DB = require('../');
 const Sequelize = require('sequelize');
 
 /**
- * This model describes notes table properties.
+ * This model describes tokens table properties.
  */
-const NoteModel = DB.instance.define(
-  'notes',
+const ApiKeyModel = DB.instance.define(
+  'apiKeys',
   {
     uuid: {
       type: Sequelize.UUID,
@@ -16,16 +16,16 @@ const NoteModel = DB.instance.define(
       type: Sequelize.UUID,
       notNull: true,
     },
-    title: Sequelize.STRING,
-    content: Sequelize.STRING,
+    apiKey: Sequelize.STRING,
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
   },
   {
     timestamps: true,
+    tableName: 'apiKeys',
   }
 );
 
-NoteModel.removeAttribute('id');
+ApiKeyModel.removeAttribute('id');
 
-module.exports = NoteModel;
+module.exports = ApiKeyModel;

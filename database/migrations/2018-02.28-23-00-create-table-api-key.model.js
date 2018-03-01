@@ -1,10 +1,10 @@
 /**
- * This migration describes create notes table.
+ * This migration describes create api keys table.
  */
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
-      .createTable('notes', {
+      .createTable('apiKeys', {
         uuid: {
           type: Sequelize.UUID,
           defaultValue: Sequelize.UUIDV4,
@@ -15,12 +15,7 @@ module.exports = {
           defaultValue: false,
           allowNull: false,
         },
-        title: {
-          type: Sequelize.STRING,
-          defaultValue: false,
-          allowNull: false,
-        },
-        content: {
+        apiKey: {
           type: Sequelize.STRING,
           defaultValue: false,
           allowNull: false,
@@ -28,7 +23,9 @@ module.exports = {
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
       })
-      .then(() => queryInterface.addIndex('notes', { fields: ['userUuid'] }));
+      .then(() =>
+        queryInterface.addIndex('apiKeys', { fields: ['uuid', 'userUuid'] })
+      );
   },
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('notes'),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('apiKeys'),
 };
