@@ -23,9 +23,7 @@ module.exports = {
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
       })
-      .then(() =>
-        queryInterface.addIndex('tokens', { fields: ['uuid', 'userUuid'] })
-      );
+      .then(() => queryInterface.addIndex('tokens', { fields: ['uuid', 'userUuid'] }));
   },
   down: (queryInterface, Sequelize) => queryInterface.dropTable('tokens'),
 };

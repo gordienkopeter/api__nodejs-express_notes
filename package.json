@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node_modules/.bin/nodemon server.js",
+    "debbuge": "node_modules/.bin/nodemon --inspect server.js",
     "test": "npm run build:test && NODE_ENV=TEST ./node_modules/.bin/mocha",
     "sequelize": "node_modules/.bin/sequelize",
-    "build":
-      "npm run create-storage && npm run cp:env && npm run sequelize db:migrate",
+    "build": "npm run create-storage && npm run cp:env && npm run sequelize db:migrate",
     "build:test": "NODE_ENV=TEST npm run build",
     "cp:env": "cp ./.env.example .env -n",
     "create-storage": "mkdir ./.storage -p"

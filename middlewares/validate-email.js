@@ -1,6 +1,11 @@
 const validator = require('validator');
 
-module.exports = email => {
+/**
+ * This module validates email of request data
+ *
+ * @param {*} password
+ */
+module.exports = (email) => {
   if (email) {
     if (typeof email !== 'string') {
       return 'Email field must be string!';

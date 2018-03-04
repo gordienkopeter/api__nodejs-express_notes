@@ -4,6 +4,10 @@ const parseAuthHeader = require('../utils/parse-authorization-header.utils');
 const AUTH_HEADER = 'authorization';
 const HEADER_AUTH_SCHEME = 'ApiKey';
 
+/**
+ * Api key strategy.
+ * This custom strategy extend passport js strategies.
+ */
 class ApiKeyStrategy extends Strategy {
   constructor(options = {}, verify) {
     super();
@@ -31,6 +35,12 @@ class ApiKeyStrategy extends Strategy {
     }
   }
 
+  /**
+   * Authenticate request based on ApiKey obtained from header
+   *
+   * @param {*} req
+   * @param {*} options
+   */
   authenticate(req, options = {}) {
     const authHeader = req.headers[AUTH_HEADER];
 
@@ -38,9 +48,9 @@ class ApiKeyStrategy extends Strategy {
       return this.fail(new Error(`No ${AUTH_HEADER} header`));
     }
 
-    const { sheme, value } = parseAuthHeader(authHeader) || {};
+    const { scheme, value } = parseAuthHeader(authHeader) || {};
 
-    if (!sheme || !value) {
+    if (!scheme || !value) {
       return this.fail(new Error(`No ${HEADER_AUTH_SCHEME} token`));
     }
 

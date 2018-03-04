@@ -9,8 +9,6 @@ const ApiKeyController = require('../controllers/api-key.controller');
 /**
  * Api key endpoint list.
  */
-apiKeyRouter.post('/', (req, res) =>
-  ApiKeyController.updateOrCreateApiKey(req, res)
-);
+apiKeyRouter.post('/', (req, res) => ApiKeyController.updateOrCreateApiKey(req, res));
 
 module.exports = apiKeyRouter;

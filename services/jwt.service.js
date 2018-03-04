@@ -39,7 +39,7 @@ class JWTService {
    *
    * @example {header} Authorization: JWT access token.
    */
-  static get JWTStategy() {
+  static get JWTStrategy() {
     return new JwtStrategy(
       { jwtFromRequest, secretOrKey, passReqToCallback: true },
       async (req, jwtPayload, next) => {

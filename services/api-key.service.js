@@ -2,11 +2,11 @@ const apiKeyStrategy = require('../strategies/api-key.strategy');
 const ApiKeyModel = require('../database/models/api-key.model');
 
 /**
- *
+ * This class describes api key auth by header
  */
 class ApiKeyService {
   /**
-   *
+   *This method generates random api key for user
    */
   static generateApiKey() {
     return (
@@ -24,8 +24,12 @@ class ApiKeyService {
         .toUpperCase()
     );
   }
+
   /**
+   * This method returns api key strategy.
+   * Api key strategy uses Authorization header.
    *
+   * @example {header} Authorization: ApiKey access token.
    */
   static get apiKeyStrategy() {
     return new apiKeyStrategy({}, async (apiKey, next) => {

@@ -1,6 +1,11 @@
 const validator = require('validator');
 
-module.exports = password => {
+/**
+ * This module validates password of request data
+ *
+ * @param {*} password
+ */
+module.exports = (password) => {
   if (password) {
     if (typeof password !== 'string') {
       return 'Password field must be string!';

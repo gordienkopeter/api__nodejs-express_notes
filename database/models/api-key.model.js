@@ -2,7 +2,7 @@ const DB = require('../');
 const Sequelize = require('sequelize');
 
 /**
- * This model describes tokens table properties.
+ * This model describes apiKey table properties.
  */
 const ApiKeyModel = DB.instance.define(
   'apiKeys',

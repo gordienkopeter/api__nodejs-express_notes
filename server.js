@@ -2,8 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const DB = require('./database');
 const routes = require('./routes');
-const JWTStategy = require('./services/jwt.service').JWTStategy;
-const apiKeyStategy = require('./services/api-key.service').apiKeyStrategy;
+const JWTStrategy = require('./services/jwt.service').JWTStrategy;
+const apiKeyStrategy = require('./services/api-key.service').apiKeyStrategy;
 const passport = require('passport');
 
 require('dotenv').config();
@@ -11,12 +11,12 @@ require('dotenv').config();
 /**
  * Passport uses jwt strategy.
  */
-passport.use(JWTStategy);
+passport.use(JWTStrategy);
 
 /**
  * Passport uses apiKey strategy
  */
-passport.use(apiKeyStategy);
+passport.use(apiKeyStrategy);
 
 /**
  * This class describes server with express framework.
@@ -44,9 +44,7 @@ class Server {
     this.express.use(passport.initialize());
     this.express.use(bodyParser.json());
     this.useRoutes();
-    this.express.listen(port, () =>
-      console.log(`Server listening on port ${port}!`)
-    );
+    this.express.listen(port, () => console.log(`Server listening on port ${port}!`));
   }
 }
 
@@ -58,3 +56,4 @@ if (!module.parent) {
 }
 
 module.exports = Server;
+1;

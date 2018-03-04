@@ -22,6 +22,16 @@ class Middleware {
   static sendErrors(errors, res) {
     res.status(400).send({ messages: errors });
   }
+
+  static buildError(errors = {}, field = '', message = '') {
+    if (!field) {
+      return message;
+    }
+
+    const error = errors[field];
+
+    return error && Array.isArray(error) ? error.concat(message) : [message];
+  }
 }
 
 module.exports = Middleware;

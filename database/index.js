@@ -16,7 +16,7 @@ class DatabaseClass {
    */
   get defaultOptions() {
     return {
-      logging: true
+      logging: true,
     };
   }
 

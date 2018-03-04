@@ -1,13 +1,18 @@
 const regExp = /(\S+)\s+(\S+)/;
 
-const parseAuthorizationHeader = hdrValue => {
+/**
+ * This module parses authorization header and returns scheme (strategy) and access token
+ *
+ * @param {string} hdrValue
+ */
+const parseAuthorizationHeader = (hdrValue) => {
   if (typeof hdrValue !== 'string') {
     return null;
   }
 
-  const [origin, sheme, value] = hdrValue.match(regExp);
+  const [origin, scheme, value] = hdrValue.match(regExp) || [];
 
-  return sheme && value && { sheme, value };
+  return scheme && value && { scheme, value };
 };
 
 module.exports = parseAuthorizationHeader;

@@ -23,9 +23,7 @@ module.exports = {
         createdAt: Sequelize.DATE,
         updatedAt: Sequelize.DATE,
       })
-      .then(() =>
-        queryInterface.addIndex('apiKeys', { fields: ['uuid', 'userUuid'] })
-      );
+      .then(() => queryInterface.addIndex('apiKeys', { fields: ['uuid', 'userUuid'] }));
   },
   down: (queryInterface, Sequelize) => queryInterface.dropTable('apiKeys'),
 };

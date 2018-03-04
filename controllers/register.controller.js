@@ -30,7 +30,7 @@ class RegisterController {
       email,
       password: passwordHash,
       firstName,
-      lastName
+      lastName,
     });
     const token = JWTService.generateTokenByUser(user);
     await TokenModel.create({ userUuid: user.uuid, token });

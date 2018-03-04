@@ -7,26 +7,6 @@ const NotesModel = require('../database/models/note.model');
  */
 class NotesMiddlewares extends Middleware {
   /**
-   * This method validates content field data.
-   *
-   * @param {*} content
-   * @param {*} errors
-   * @param {*} res
-   * @param {*} next
-   */
-  static next(content, errors, res, next) {
-    if (!content) {
-      errors.content = 'Contect field is required!';
-    }
-
-    if (this.isErrors(errors)) {
-      return this.sendErrors(errors, res);
-    }
-
-    next();
-  }
-
-  /**
    * This method validates create note endpoint.
    *
    * @param {*} req
@@ -34,18 +14,27 @@ class NotesMiddlewares extends Middleware {
    * @param {*} next
    */
   static async create(req, res, next) {
-    const { content, title } = req.body;
+    const { body: { content, title }, user: { uuid: userUuid } } = req;
     const errors = {};
 
     if (!title) {
-      errors.title = 'Title field is required!';
+      errors.title = this.buildError(errors, 'title', 'Title field is required!');
     }
 
-    if (await NotesModel.findOne({ where: { title } })) {
-      errors.title = 'Title is exists!';
+    // checks unique the user note by title
+    if (await NotesModel.findOne({ where: { title, userUuid } })) {
+      errors.title = this.buildError(errors, 'title', 'Title is exists!');
     }
 
-    this.next(content, errors, next);
+    if (!content) {
+      errors.content = this.buildError(errors, 'content', 'Content field is required!');
+    }
+
+    if (this.isErrors(errors)) {
+      return this.sendErrors(errors, res);
+    }
+
+    next();
   }
 
   /**
@@ -57,15 +46,30 @@ class NotesMiddlewares extends Middleware {
    * @param {*} next
    */
   static async update(req, res, next) {
-    const { body: { content }, params: { id }, user: { uuid } } = req;
+    const { params: { id }, user: { uuid: userUuid } } = req;
     const errors = {};
-    const { userUuid } = (await NotesModel.findById(id)) || {};
 
-    if (userUuid !== uuid) {
+    const noteModel = await NotesModel.findById(id);
+
+    if (!noteModel) {
+      return res.status(404).send();
+    }
+
+    if (userUuid !== noteModel.userUuid) {
       return res.status(403).send();
     }
 
-    this.next(content, errors, res, next);
+    next();
+  }
+
+  static async destroy(req, res, next) {
+    const { id } = req.params;
+
+    if (await NotesModel.findById(id)) {
+      return next();
+    }
+
+    return res.status(404).send();
   }
 }
 
