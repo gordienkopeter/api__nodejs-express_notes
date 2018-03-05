@@ -21,7 +21,6 @@ passport.use(apiKeyStrategy);
 /**
  * This class describes server with express framework.
  */
-
 class Server {
   constructor() {
     this.db = DB;
@@ -56,4 +55,3 @@ if (!module.parent) {
 }
 
 module.exports = Server;
-1;

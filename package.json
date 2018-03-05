@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node_modules/.bin/nodemon server.js",
     "debbuge": "node_modules/.bin/nodemon --inspect server.js",
-    "test": "npm run build:test && NODE_ENV=TEST ./node_modules/.bin/mocha",
+    "test": "npm run build:test && NODE_ENV=TEST ./node_modules/.bin/mocha ./tests/**/*.spec.js",
     "sequelize": "node_modules/.bin/sequelize",
     "build": "npm run create-storage && npm run cp:env && npm run sequelize db:migrate",
     "build:test": "NODE_ENV=TEST npm run build",
