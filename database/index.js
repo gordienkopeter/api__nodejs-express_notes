@@ -6,7 +6,7 @@ require('dotenv').config();
 /**
  * This class describes connecting in database.
  */
-class DatabaseClass {
+class Database {
   constructor() {
     this.connect(DBConfig);
   }
@@ -16,7 +16,7 @@ class DatabaseClass {
    */
   get defaultOptions() {
     return {
-      logging: true,
+      logging: true
     };
   }
 
@@ -34,4 +34,4 @@ class DatabaseClass {
   }
 }
 
-module.exports = new DatabaseClass();
+module.exports = new Database();
